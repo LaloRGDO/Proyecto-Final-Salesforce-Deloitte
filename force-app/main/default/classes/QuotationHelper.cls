@@ -43,12 +43,17 @@ public class QuotationHelper implements QuotationSync {
         List<Inventario_Custom__c> productoInventario = [SELECT Id, Name, ProductCode__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c WHERE ProductCode__c = :productCode];
         double cantidadDisponible = 0;
         
-        if(productoInventario.size() >= 0){
-            cantidadDisponible = productoInventario[0].Cantidad_dis__c -  productoInventario[0].Cantidad_apart__c;
-            System.debug('La cantidad disponible del producto ' + productoInventario[0].Name + ' es: ' + cantidadDisponible);
-            return cantidadDisponible;
+        if(productoInventario.size() >= 1){
+            if(productoInventario[0].Cantidad_dis__c == null || productoInventario[0].Cantidad_apart__c == null){
+                System.debug('Cantidades disponibles del producto '+productoInventario[0].Name+' no especificadas, cantidad disponible previa: ' + cantidadDisponible);
+                return cantidadDisponible;
+            }else{
+                cantidadDisponible = productoInventario[0].Cantidad_dis__c -  productoInventario[0].Cantidad_apart__c;
+                System.debug('La cantidad disponible del producto ' + productoInventario[0].Name + ' es: ' + cantidadDisponible);
+                return cantidadDisponible;
+            }
         }else{
-            System.debug('Producto no encontrado o cantidad disponible: ' + cantidadDisponible);
+            System.debug('Producto no encontrado, retorna cantidad disponible: '+cantidadDisponible);
             return cantidadDisponible;
         }
 
