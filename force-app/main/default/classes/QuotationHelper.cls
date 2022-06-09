@@ -12,7 +12,7 @@ public class QuotationHelper implements QuotationSync {
     }
     
     public List<Inventario_Custom__c> productsInInventory(){
-        List<Inventario_Custom__c> inventarioLista = [SELECT Id, Name, ProductCode__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c LIMIT 200];
+        List<Inventario_Custom__c> inventarioLista = [SELECT Id, Name, Product_Code__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c LIMIT 200];
         for(Inventario_Custom__c inv : inventarioLista){
             System.debug(inv.Name);
         }
@@ -20,16 +20,16 @@ public class QuotationHelper implements QuotationSync {
     }
 
     public boolean confirmProductExistByCode(String productCode){
-        List<Product_Custom__c> productosLista = [SELECT Id, Name, ProductCode__c FROM Product_Custom__c];
+        List<Product2> productosLista = [SELECT Id, Name, ProductCode FROM Product2];
         boolean productoEncontrado = false;
         if(productosLista.size() == 0){
             System.debug('No hay productos cargados');
             return productoEncontrado;//retorna falso si no hay ningún producto
         }else{
-            for(Product_Custom__c product : productosLista){
-                if(product.ProductCode__c == productCode){
+            for(Product2 product : productosLista){
+                if(product.ProductCode == productCode){
                     productoEncontrado = true;//Si encuentra un producto con el mismo productCode que el parámetro productoEncontrado se cambia a true
-                    System.debug('Producto Encontrado: ' + product.Name + ' Código: ' + product.ProductCode__c);
+                    System.debug('Producto Encontrado: ' + product.Name + ' Código: ' + product.ProductCode);
                     Break;//Sale del bucle una vez encontrado
                 }
             }
@@ -41,7 +41,7 @@ public class QuotationHelper implements QuotationSync {
 
     public double searchProductByCode(String productCode){
         //Buscar el inventario mediante el parámetro pasado y declarar variable cantidadDisponible (double)
-        List<Inventario_Custom__c> productoInventario = [SELECT Id, Name, ProductCode__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c WHERE ProductCode__c = :productCode];
+        List<Inventario_Custom__c> productoInventario = [SELECT Id, Name, Product_Code__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c WHERE Product_Code__c = :productCode];
         double cantidadDisponible = 0;
         
         //Caso se encuentre el inventario
@@ -64,4 +64,20 @@ public class QuotationHelper implements QuotationSync {
 
     }
 
+    public static void ActualizarCantidadApartadaHelper(List<QuoteLineItem> qliList){
+        //Traer registros de inventario y variable de lista para guardar registros a actualizar
+        List<Inventario_Custom__c> invList = [SELECT Product__c, Cantidad_apart__c FROM Inventario_Custom__c];
+        List<Inventario_Custom__c> invActList = new List <Inventario_Custom__c>();
+        for(QuoteLineItem qli : qliList){
+            for(Inventario_Custom__c inv : invList){
+                if(qli.Product2Id == inv.Product__c){
+                    inv.Cantidad_apart__c = qli.Quantity;
+                    invActList.add(inv);
+                }
+            }
+        }
+        if(invActList.size()>0){
+            update invActList;
+        }
+    }
 }
