@@ -1,0 +1,17 @@
+<apex:page standardController="Quote" extensions="InventarioViewController">
+    <apex:pageBlock >
+        <apex:form >
+            <apex:outputLabel value="Codigo" />
+            <apex:inputText value="{!codigo}" label="Codigo de Producto" />
+            <apex:commandButton value="Buscar" action="{!buscar}" />
+            <apex:commandButton value="Limpiar" action="{!limpiar}" />
+            <apex:pageBlock title="ProductosInventario">
+                <apex:pageBlockTable value="{!listInv}" var="inv">
+                    <apex:column value="{!inv.Product_Code__c}" />
+                    <apex:column value="{!inv.Cantidad_dis__c}" />
+                    <apex:column value="{!inv.Cantidad_apart__c}" />
+                </apex:pageBlockTable>
+            </apex:pageBlock>
+        </apex:form>
+    </apex:pageBlock>
+</apex:page>

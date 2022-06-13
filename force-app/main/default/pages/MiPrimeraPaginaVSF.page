@@ -1,0 +1,25 @@
+<apex:page standardController="Inventario_Custom__c" renderAs="pdf">
+    <apex:sectionHeader title="Contact Edit" subtitle="Mi nueva pagina visualforce" />
+    <apex:form >
+        <apex:pageBlock >
+            <apex:outputPanel >
+                La clase de salesforce 2022 es la mejor <br/>
+                La clase de salesforce 2022 es la mejor <br/>
+                Ultima Línea
+            </apex:outputPanel>
+        </apex:pageBlock>
+        <apex:pageBlock >
+            <apex:outputLabel >Esto es un label<br/></apex:outputLabel>
+            <apex:outputField value="{!Inventario_Custom__c.Name}"/>
+            <apex:commandButton value="Presioname"/>
+        </apex:pageBlock>
+    </apex:form>
+<style>
+    .miEstilo{
+    color: red;
+    font-size: 18px;
+    font-family: Courier;
+    float: left;
+    width: 100%;
+</style>
+</apex:page>

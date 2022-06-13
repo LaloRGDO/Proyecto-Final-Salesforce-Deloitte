@@ -19,6 +19,27 @@ public class QuotationHelper implements QuotationSync {
         return inventarioLista;
     }
 
+    @InvocableMethod(label='StockAlert')
+    public static void StockEmptyAlert(){
+
+        List<Inventario_Custom__c> invList = new List<Inventario_Custom__c>();
+        QuotationHelper qh = new QuotationHelper();
+
+        invList = qh.productsInInventory();
+
+        List<FeedItem> feed = new List<FeedItem>();
+
+        for(Inventario_Custom__c inv : invList){
+            if(inv.Cantidad_dis__c==0){
+                FeedItem post = new FeedItem();
+                post.ParentId = UserInfo.getUserId();
+                post.Body = 'Producto ' + inv.Name + ' sin Inventario';
+                feed.add(post);
+            }
+        }
+        insert feed;
+    }
+
     public static boolean confirmProductExistByCode(String productCode){
         List<Product2> productosLista = [SELECT Id, Name, ProductCode FROM Product2];
         boolean productoEncontrado = false;
@@ -52,7 +73,7 @@ public class QuotationHelper implements QuotationSync {
                 return cantidadDisponible;
             }else{
                 //Caso se encuentre el inventario y los campos no estén vacíos
-                cantidadDisponible = productoInventario[0].Cantidad_dis__c -  productoInventario[0].Cantidad_apart__c;
+                cantidadDisponible = productoInventario[0].Cantidad_dis__c;
                 System.debug('La cantidad disponible del producto ' + productoInventario[0].Name + ' es: ' + cantidadDisponible);
                 return cantidadDisponible;
             }
@@ -61,7 +82,6 @@ public class QuotationHelper implements QuotationSync {
             System.debug('Producto no encontrado, retorna cantidad disponible: '+cantidadDisponible);
             return cantidadDisponible;
         }
-
     }
 
     public static void ActualizarCantidadApartadaHelper(List<QuoteLineItem> qliList, Integer num){
@@ -98,14 +118,13 @@ public class QuotationHelper implements QuotationSync {
                     //Comparar si el producto es el mismo
                     if(qli.Product2Id == inv.Product__c){
                         //verificar que cantidad sea mayor a la cantidad disponible en inventario para lanzar error
-                        if(qli.Quantity > (inv.Cantidad_dis__c - inv.Cantidad_apart__c)){
+                        if(qli.Quantity > (inv.Cantidad_dis__c)){
                             qli.addError('El campo Cantidad no debe de ser mayor a la cantidad disponible en inventario : '+(inv.Cantidad_dis__c - inv.Cantidad_apart__c)+' unidades disponibles');
                         }
                     }
                 }                
             }
-        }
-        
+        } 
     }
     
 }
