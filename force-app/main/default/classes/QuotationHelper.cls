@@ -119,12 +119,11 @@ public class QuotationHelper implements QuotationSync {
                     if(qli.Product2Id == inv.Product__c){
                         //verificar que cantidad sea mayor a la cantidad disponible en inventario para lanzar error
                         if(qli.Quantity > (inv.Cantidad_dis__c)){
-                            qli.addError('El campo Cantidad no debe de ser mayor a la cantidad disponible en inventario : '+(inv.Cantidad_dis__c - inv.Cantidad_apart__c)+' unidades disponibles');
+                            qli.addError('El campo Cantidad no debe de ser mayor a la cantidad disponible en inventario : '+ inv.Cantidad_dis__c +' unidades disponibles');
                         }
                     }
                 }                
             }
         } 
-    }
-    
+    }  
 }

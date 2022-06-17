@@ -1,0 +1,32 @@
+<template>
+    <lightning-card title="Cotizador">
+        <lightning-card title="Buscar un Producto">
+            <lightning-input type="text" label="Digite el código del producto" class="slds-m-horizontal_medium"></lightning-input><br>
+            <lightning-button variant="brand" label="Buscar" class="slds-m-around_medium"></lightning-button>
+        </lightning-card>
+
+        <lightning-card title="Detalles del Producto">
+            <table class="slds-align_absolute-center">
+                <thead>
+                    <tr>
+                        <th class="slds-p-horizontal_large">
+                        <div title="Product Name">Product Name</div>
+                        </th>
+                        <th class="slds-p-horizontal_large">
+                        <div title="Precio Lista">List Price</div>
+                        </th>
+                        <th class="slds-p-horizontal_large">
+                        <div title="ID Externo">Product Code</div>
+                        </th>
+                        <th class="slds-p-horizontal_large">
+                        <div title="Cantidad">Cantidad Disponible</div>
+                        </th>
+                        <th class="slds-p-horizontal_large">
+                        <div title="Disponible">Cantidad a Apartar</div>
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </lightning-card>
+    </lightning-card>
+</template>

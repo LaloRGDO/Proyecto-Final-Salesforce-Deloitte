@@ -1,0 +1,24 @@
+<apex:page standardController="Quote" extensions="CotizadorController">
+    <apex:pageBlock title="Cotizador">
+        <apex:form >
+            <apex:pageBlock title="Buscar un Producto">
+                <apex:messages />
+                <apex:outputLabel value="Código del Producto: "></apex:outputLabel>
+                <apex:inputText value="{!codigoProducto}"/>
+                <apex:commandButton value="Buscar" action="{!buscar}"/>
+            </apex:pageBlock>
+            <apex:pageBlock title="Detalles del Producto">
+                <apex:pageBlockTable value="{!invList}" var="inv">
+                    <apex:column value="{!inv.Name}"/>
+                    <apex:column value="{!inv.PricebookEntries[0].UnitPrice}"/>
+                    <apex:column value="{!inv.ProductCode}"/>
+                    <apex:column value="{!inv.Inventarios_Custom__r[0].Cantidad_dis__c}"/>
+                    <apex:column headerValue="Cantidad a apartar"><apex:inputText value="{!cantidad}"/></apex:column>
+                </apex:pageBlockTable><br/>
+                <apex:commandButton value="Atrás" action="{!atras}"/>
+                <apex:commandButton value="Cancelar" action="{!cancel}"/>
+                <apex:commandButton value="Guardar" action="{!guardar}"/>
+            </apex:pageBlock>
+       </apex:form>
+    </apex:pageBlock>
+</apex:page>
