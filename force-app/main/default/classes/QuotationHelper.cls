@@ -1,8 +1,8 @@
 public class QuotationHelper implements QuotationSync {
     
     public void initialConfig(){
-        Account acct1 = new Account(Name = 'Compumundo');
-        Account acct2 = new Account(Name = 'Compuworld');
+        Account acct1 = new Account(Name = 'Compumundo', Website='www.compumundo.com');
+        Account acct2 = new Account(Name = 'Compuworld', Website='www.compuworl.com');
         
         List<Account> accountList = new List<Account>();
         accountList.add(acct1);
@@ -13,9 +13,6 @@ public class QuotationHelper implements QuotationSync {
     
     public List<Inventario_Custom__c> productsInInventory(){
         List<Inventario_Custom__c> inventarioLista = [SELECT Id, Name, Product_Code__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c LIMIT 200];
-        for(Inventario_Custom__c inv : inventarioLista){
-            System.debug(inv.Name);
-        }
         return inventarioLista;
     }
 
@@ -41,45 +38,31 @@ public class QuotationHelper implements QuotationSync {
     }
 
     public static boolean confirmProductExistByCode(String productCode){
-        List<Product2> productosLista = [SELECT Id, Name, ProductCode FROM Product2];
+        List<Product2> productosLista = [SELECT Id, Name, ProductCode FROM Product2 WHERE ProductCode = :productCode];
         boolean productoEncontrado = false;
-        if(productosLista.size() == 0){
-            System.debug('No hay productos cargados');
-            return productoEncontrado;//retorna falso si no hay ningún producto
+        if(productosLista.size()>0){
+            productoEncontrado = true;
+            return productoEncontrado;
         }else{
-            for(Product2 product : productosLista){
-                if(product.ProductCode == productCode){
-                    productoEncontrado = true;//Si encuentra un producto con el mismo productCode que el parámetro productoEncontrado se cambia a true
-                    System.debug('Producto Encontrado: ' + product.Name + ' Código: ' + product.ProductCode);
-                    Break;//Sale del bucle una vez encontrado
-                }
-            }
+            return productoEncontrado;
         }
-        System.debug(productoEncontrado);
-        //retorna falso o verdadero según el valor de la variable productoEncontrado
-        return productoEncontrado;
     }
 
     public static double searchProductByCode(String productCode){
         //Buscar el inventario mediante el parámetro pasado y declarar variable cantidadDisponible (double)
-        List<Inventario_Custom__c> productoInventario = [SELECT Id, Name, Product_Code__c, Cantidad_dis__c, Cantidad_apart__c FROM Inventario_Custom__c WHERE Product_Code__c = :productCode];
+        List<Inventario_Custom__c> productoInventario = [SELECT Id, Name, Product_Code__c, Cantidad_dis__c, Cantidad_apart__c
+                                                         FROM Inventario_Custom__c WHERE Product_Code__c = :productCode];
         double cantidadDisponible = 0;
         
         //Caso se encuentre el inventario
-        if(productoInventario.size() >= 1){
-            //Caso se encuentre el inventario pero cantidad disponible y cantidad apartada estén vacíos (null) retorna 0
-            if(productoInventario[0].Cantidad_dis__c == null || productoInventario[0].Cantidad_apart__c == null){
-                System.debug('Cantidades disponibles del producto '+productoInventario[0].Name+' no especificadas, cantidad disponible previa: ' + cantidadDisponible);
-                return cantidadDisponible;
-            }else{
-                //Caso se encuentre el inventario y los campos no estén vacíos
-                cantidadDisponible = productoInventario[0].Cantidad_dis__c;
-                System.debug('La cantidad disponible del producto ' + productoInventario[0].Name + ' es: ' + cantidadDisponible);
-                return cantidadDisponible;
-            }
+        if(productoInventario.size() > 0){
+            //Caso se encuentre el inventario y los campos no estén vacíos
+            cantidadDisponible = productoInventario[0].Cantidad_dis__c;
+            System.debug('Hay '+cantidadDisponible+' Piezas disponibles');
+            return cantidadDisponible;
         }else{
             //Caso no se encuentre el inventario con el parámetro, retorna 0
-            System.debug('Producto no encontrado, retorna cantidad disponible: '+cantidadDisponible);
+            System.debug('Producto no encontrado');
             return cantidadDisponible;
         }
     }
@@ -118,7 +101,7 @@ public class QuotationHelper implements QuotationSync {
                     //Comparar si el producto es el mismo
                     if(qli.Product2Id == inv.Product__c){
                         //verificar que cantidad sea mayor a la cantidad disponible en inventario para lanzar error
-                        if(qli.Quantity > (inv.Cantidad_dis__c)){
+                        if(qli.Quantity > inv.Cantidad_dis__c){
                             qli.addError('El campo Cantidad no debe de ser mayor a la cantidad disponible en inventario : '+ inv.Cantidad_dis__c +' unidades disponibles');
                         }
                     }

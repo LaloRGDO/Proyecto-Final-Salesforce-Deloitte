@@ -17,6 +17,4 @@ trigger TriggerActualizarCantidadApartada on QuoteLineItem (after insert, after 
     if(Trigger.isBefore){
         QuotationHelper.ActualizarCantidadApartadaHelper(Trigger.new, 2);
     }
-    
-
 }

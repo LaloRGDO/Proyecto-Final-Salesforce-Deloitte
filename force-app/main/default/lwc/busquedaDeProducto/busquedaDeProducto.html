@@ -1,32 +1,24 @@
 <template>
     <lightning-card title="Cotizador">
-        <lightning-card title="Buscar un Producto">
-            <lightning-input type="text" label="Digite el código del producto" class="slds-m-horizontal_medium"></lightning-input><br>
-            <lightning-button variant="brand" label="Buscar" class="slds-m-around_medium"></lightning-button>
-        </lightning-card>
+        <div class="slds-m-around_medium">
+            <lightning-input type="text" label="Código de Producto" onchange={cambiarProductoBuscado}></lightning-input>
+            <br>
+            <lightning-button variant="brand" label="Buscar" class="slds-m-left_x-small" onclick={searchProduct}></lightning-button>
 
-        <lightning-card title="Detalles del Producto">
-            <table class="slds-align_absolute-center">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-m-top_small slds-table_col-bordered">
                 <thead>
-                    <tr>
-                        <th class="slds-p-horizontal_large">
-                        <div title="Product Name">Product Name</div>
-                        </th>
-                        <th class="slds-p-horizontal_large">
-                        <div title="Precio Lista">List Price</div>
-                        </th>
-                        <th class="slds-p-horizontal_large">
-                        <div title="ID Externo">Product Code</div>
-                        </th>
-                        <th class="slds-p-horizontal_large">
-                        <div title="Cantidad">Cantidad Disponible</div>
-                        </th>
-                        <th class="slds-p-horizontal_large">
-                        <div title="Disponible">Cantidad a Apartar</div>
-                        </th>
+                    <tr class="slds-line-height_reset">
+                        <th scope="col"><div class="slds-align_absolute-center" title="Product Name">Product Name</div></th>
+                        <th scope="col"><div class="slds-align_absolute-center" title="List Price">List Price</div></th>
+                        <th scope="col"><div class="slds-align_absolute-center" title="Product Code">Product Code</div></th>
+                        <th scope="col"><div class="slds-align_absolute-center" title="Cantidad Disponible">Cantidad Disponible</div></th>
+                        <th scope="col"><div class="slds-align_absolute-center" title="Cantidad a Apartar">Cantidad a Apartar</div></th>
                     </tr>
                 </thead>
+                <tbody>
+                    
+                </tbody>
             </table>
-        </lightning-card>
+        </div>
     </lightning-card>
 </template>
