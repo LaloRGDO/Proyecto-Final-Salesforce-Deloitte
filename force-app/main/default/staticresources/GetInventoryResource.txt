@@ -1,0 +1,1 @@
+{"statusCode":200,"body":{"Inventory":[{"name":"CL1010_Inv","ProductID":"CL1010","Quan":7336,"BlockedQuan":43},{"name":"MC1020_Inv","ProductID":"MC1020","Quan":8505,"BlockedQuan":43},{"name":"DLL1030_Inv","ProductID":"DLL1030","Quan":6579,"BlockedQuan":27}]}}
