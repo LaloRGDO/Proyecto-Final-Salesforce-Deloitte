@@ -17,7 +17,7 @@ export default class BusquedaDeProducto extends LightningElement {
     @track mostrarTabla = false;
     @track productId;
     @track quantity = '';
-    @track priceBookId;
+    @track priceBookEntryId;
     @api recordId;
 
     cambiarProductoBuscado(event){
@@ -36,23 +36,13 @@ export default class BusquedaDeProducto extends LightningElement {
             .then(result =>{
                 if(result != null){
                     this.mostrarTabla = true;
-                    // console.log("respuesta recibida de apex: "+result);
-                    // console.log(Object.values(result)[0]['Name']);
-                    // console.log(Object.keys(Object.values(result)[0]));
                     this.informacion = Object.values(result)[0];
-                    // console.log(this.informacion['Id']);
                     this.productId = this.informacion['Id'];
-                    // console.log(this.informacion['Name']);
                     this.nombreProducto  = this.informacion['Name'];
-                    // console.log(this.informacion['ProductCode']);
                     this.productCode = this.informacion['ProductCode'];
-                    // console.log(typeof(this.informacion['PricebookEntries']));
-                    // console.log(this.informacion['PricebookEntries'][0]['UnitPrice']);
-                    this.priceBookId = this.informacion['PricebookEntries'][0]['Id'];
-                    this.listPrice = this.informacion['PricebookEntries'][0]['UnitPrice'];
-                    // console.log(this.informacion['Inventarios_Custom__r'][0]['Cantidad_dis__c']);
+                    this.priceBookEntryId = this.informacion['PricebookEntries'][0]['Id'];
+                    this.listPrice = this.informacion['PricebookEntries'][0]['UnitPrice']
                     this.cantidadDisponible = this.informacion['Inventarios_Custom__r'][0]['Cantidad_dis__c'];
-                    // console.log(this.informacion['Inventarios_Custom__r'][0]['Cantidad_apart__c']);
                 }else{
                     const event = new ShowToastEvent({
                         title: 'Error',
@@ -93,34 +83,47 @@ export default class BusquedaDeProducto extends LightningElement {
         console.log(typeof(this.productId)+' '+this.productId);
         console.log(typeof(this.quantity)+' '+this.quantity);
         console.log(typeof(this.listPrice)+' '+this.listPrice);
-        console.log(typeof(this.priceBookId)+' '+this.priceBookId);
+        console.log(typeof(this.priceBookId)+' '+this.priceBookEntryId);
         console.log(typeof(this.recordId)+' '+this.recordId);
 
-
-        crearQli({
-            productId: this.productId,
-            cantidadApart: this.quantity,
-            unitPrice: this.listPrice,
-            pbeId: this.priceBookId,
-            QuoteId: this.recordId
-        })
-        .then(result=>{
-            console.log(result);
-            const event = new ShowToastEvent({
-                title: 'New Quote Line Item created',
-                message: 'Se ha agregado correctamente el Quote Line Item',
-                variant:'success',
-            });
-            this.dispatchEvent(event);
-        })
-        .catch(error=>{
-            console.log(error);
+        if(this.quantity <= this.cantidadDisponible){
+            crearQli({
+                productId: this.productId,
+                cantidadApart: this.quantity,
+                unitPrice: this.listPrice,
+                pbeId: this.priceBookEntryId,
+                QuoteId: this.recordId
+            })
+            .then(result=>{
+                console.log(result);
+                const event = new ShowToastEvent({
+                    title: 'New Quote Line Item created',
+                    message: 'Se ha agregado correctamente el Quote Line Item',
+                    variant:'success',
+                });
+                this.dispatchEvent(event);
+            })
+            .catch(error=>{
+                console.log(error);
+                const event = new ShowToastEvent({
+                    title: 'Error',
+                    message: 'Error al agregar el Quote Line Item',
+                    variant:'error',
+                });
+                this.dispatchEvent(event);
+            })
+            this.mostrarTabla = false;
+            this.productoBuscado = '';
+            this.quantity = '';
+            const input = this.template.querySelector('.input');
+            input.value = '';
+        }else{
             const event = new ShowToastEvent({
                 title: 'Error',
-                message: 'Error al agregar el Quote Line Item',
+                message: 'La cantidad a apartar no puede ser mayor a la cantidad disponible',
                 variant:'error',
             });
             this.dispatchEvent(event);
-        })
+        }
     }
 }
