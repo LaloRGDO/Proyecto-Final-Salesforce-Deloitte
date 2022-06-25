@@ -1,5 +1,6 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
+import { updateRecord } from 'lightning/uiRecordApi';
 import buscarProducto from '@salesforce/apex/LWCQuoteController.buscarProducto';
 import crearQli from '@salesforce/apex/LWCQuoteController.crearQli';
 
@@ -102,6 +103,8 @@ export default class BusquedaDeProducto extends LightningElement {
                     variant:'success',
                 });
                 this.dispatchEvent(event);
+                eval("$A.get('e.force:refreshView').fire();");
+                
             })
             .catch(error=>{
                 console.log(error);
