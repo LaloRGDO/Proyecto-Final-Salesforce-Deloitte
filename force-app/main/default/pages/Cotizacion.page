@@ -1,0 +1,28 @@
+<apex:page standardController="Quote" extensions="ControllerCotizacion" renderAs="pdf">
+    <apex:stylesheet value="{!$Resource.cssForCotizacion}"/>
+    <apex:pageBlock title="Cotización">
+        <apex:image alt="Logo" title="Logo" url="{!$Resource.logo}"/><br/><br/>
+        <apex:outputText styleClass="titulo" value="{!Quote.Name}"/><br/>
+        <apex:outputText styleClass="titulo" value="No. de Cotización: "/>
+        <apex:outputField value="{!Quote.QuoteNumber}"/><br/>
+        <apex:outputText styleClass="titulo" value="Empresa: "/>
+        <apex:outputField value="{!Quote.AccountId}"/><br/>
+    </apex:pageBlock>
+    
+    <apex:pageBlock title="Productos">
+        <apex:pageBlockTable value="{!Quote.quoteLineItems}" var="qli">
+            <apex:column value="{!qli.Product2.Name}"/>
+            <apex:column value="{!qli.Product_Code__c}"/>
+            <apex:column value="{!qli.unitPrice}"/>
+            <apex:column value="{!qli.Quantity}"/>
+            <apex:column value="{!qli.TotalPrice}"/>
+        </apex:pageBlockTable>
+        <apex:outputText styleClass="titulo" value="Precio Total: "/>
+        <apex:outputText value="{!Quote.TotalPrice}"/>
+    </apex:pageBlock>
+    
+        
+        <p>{!TODAY()}</p>
+        <p>{!'Para dudas o comentarios favor de comunicarse con su asesor de ventas '& $User.FirstName & ' ' & $User.LastName}</p>
+
+</apex:page>
